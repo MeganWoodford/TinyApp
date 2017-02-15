@@ -9,10 +9,16 @@
 
       <a href="">Click here!</a>
       <ul>
-        <% Object.keys(urls).forEach(function(shrtUrl) { %>
-          <li><%= shrtUrl %> : <%= urls[shrtUrl]%></li>
+        <% Object.keys(urls).forEach(function(shortUrl) { %>
+          <form method="POST" action="/urls/<%= shortUrl %>/delete">
+            <li><%= shortUrl %> &#8594; <%= urls[shortUrl]%></li>
+            <input type="submit" value="Delete" name="DELETE"/>
+            <a href="/urls/:id">Edit</a>
+          </form>
         <% }); %>
+
       </ul>
+
 
 </body>
 </html>

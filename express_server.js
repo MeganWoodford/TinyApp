@@ -44,6 +44,20 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] = req.body.newLong;
+  res.redirect("/urls");
+});
+
+app.post("/urls/:id/delete", (req, res) => {
+  // get the id (inside req.params.id)
+  // remove it from urlDatabase
+  delete urlDatabase[req.params.id];
+  // redirect somewhere (perhaps /urls?)
+  console.log(req.params.id);
+  res.redirect("/urls");
+});
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
