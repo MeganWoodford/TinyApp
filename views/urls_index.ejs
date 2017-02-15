@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+  <% include ./partials/_header.ejs %>
+  <h2>URLS:</h2>
+
+      <a href="">Click here!</a>
+      <ul>
+        <% Object.keys(urls).forEach(function(shrtUrl) { %>
+          <li><%= shrtUrl %> : <%= urls[shrtUrl]%></li>
+        <% }); %>
+      </ul>
+
+</body>
+</html>
