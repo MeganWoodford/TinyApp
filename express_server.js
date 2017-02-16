@@ -36,12 +36,12 @@ var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies.tinyApp };
+  let templateVars = { urls: urlDatabase, user: users[req.cookies.tinyApp] };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies.tinyApp };
+  let templateVars = { user: users[req.cookies.tinyApp] };
   res.render("urls_new");
 });
 
@@ -54,7 +54,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies.username };
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.username] };
   res.render("urls_show", templateVars);
 });
 
@@ -89,10 +89,6 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-app.post("/login", (req, res) => {
-  res.cookie("tinyApp", req.body.username);
-  res.redirect('/');
-});
 
 app.post("/logout", (req, res) => {
   res.clearCookie("tinyApp", req.body.username);
@@ -110,7 +106,7 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
-}
+};
 
 app.get("/register", (req, res) => {
   res.render("urls_register");
@@ -135,6 +131,16 @@ app.post("/register", (req, res) => {
     res.cookie('tinyApp', userID);
     res.redirect('/')
           console.log(users);
+  });
+
+  app.get("/login", (req, res) => {
+    let templateVars = { urls: urlDatabase, user: users[req.cookies.tinyApp] };
+    res.render("urls_login");
+  });
+
+  app.post("/login", (req, res) => {
+    res.cookie("tinyApp", req.body.username);
+    res.redirect('/');
   });
 
 

@@ -1,14 +1,16 @@
 <h1> TinyApp </h1>
 
-
-<form method="POST" action="/login">
-  <input type="text" name="username">
-  <input type="submit" value="Login">
-</form>
-
-<% if (typeof(username) != 'undefined') { %>
-  <%= username%>
+<% if (typeof(user) != 'undefined') { %>
+  <%= user.email%>
   <form method="POST" action="/logout">
     <input type="submit" value="Logout">
   </form>
+<% } %>
+
+<% if (typeof(user) === 'undefined') { %>
+  <a href="/register">Register</a>
+<% } %>
+
+<% if (typeof(user) === 'undefined') { %>
+  <a href="/login">Login</a>
 <% } %>
