@@ -12,6 +12,16 @@ function generateRandomString() {
   return text;
 }
 
+function seeIfUserExists(users, emailString) {
+  for (user in users){
+    if (users[user].email === emailString) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 app.set("view engine", "ejs");
 
 var urlDatabase = {
@@ -107,16 +117,26 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+
   if (!req.body.email || !req.body.password) {
-    res.status(400).end('Please use a valid email and password');
-  } else {
-    let userID = generateRandomString();
-      users[userID] = {id: userID, email: req.body.email, password: req.body.password};
-    res.cookie('tinyApp', userID);
-    res.redirect('/');
-    console.log(users);
+    res.status(400).send('Please use a valid email and password');
+    console.log('Error 400');
+    return;
   };
-});
+
+  if (seeIfUserExists(users, req.body.email)) {
+    res.status(400).send('That email is already registered, please use a different one');
+    console.log('Error 400');
+    return;
+  };
+
+  let userID = generateRandomString();
+    users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+    res.cookie('tinyApp', userID);
+    res.redirect('/')
+          console.log(users);
+  });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
