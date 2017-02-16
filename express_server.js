@@ -107,15 +107,15 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let userID = generateRandomString()
-  users[userID] = {
-    id: userID,
-    email: req.body.email,
-    password: req.body.password
+  if (!req.body.email || !req.body.password) {
+    res.status(400).end('Please use a valid email and password');
+  } else {
+    let userID = generateRandomString();
+      users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+    res.cookie('tinyApp', userID);
+    res.redirect('/');
+    console.log(users);
   };
-  res.cookie('tinyApp', userID);
-  console.log(users);
-  res.redirect('/');
 });
 
 app.listen(PORT, () => {
