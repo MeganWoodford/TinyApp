@@ -11,13 +11,14 @@
       <ul>
         <% Object.keys(urls).forEach(function(shortUrl) { %>
 
+          <li><%= shortUrl %> &#8594; <%= urls[shortUrl].longURL%></li>
 
-
-          <form method="POST" action="/urls/<%= shortUrl %>/delete">
-            <li><%= shortUrl %> &#8594; <%= urls[shortUrl].longURL%></li>
-            <input type="submit" value="Delete" name="DELETE"/>
-            <a href="/urls/:id">Edit</a>
-          </form>
+          <% if (user && user["id"] == urls[shortUrl]["userID"]) { %>
+            <form method="POST" action="/urls/<%= shortUrl %>/delete">
+              <input type="submit" value="Delete" name="DELETE"/>
+              <a href="/urls/:id">Edit</a>
+            </form>
+          <% } %>
         <% }); %>
 
       </ul>

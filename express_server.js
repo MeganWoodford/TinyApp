@@ -21,6 +21,15 @@ function seeIfUserExists(users, emailString) {
   return false;
 }
 
+function urlsForUser(id) {
+  const userURLs = {};
+  for (shortURL in urlDatabase) {
+    if (id === urlDatabase[shortURL].userID) {
+      userURLs[shortURL] = urlDatabase[shortURL];
+    }
+  } return userURLs;
+}
+
 
 app.set("view engine", "ejs");
 
@@ -54,7 +63,7 @@ app.use(cookieParser());
 
 app.get("/urls", (req, res) => {
   console.log(39, req.cookies, users);
-  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
+  let templateVars = { urls: urlsForUser(req.cookies.user_id), user: users[req.cookies.user_id] };
   // templateVars.user.email = 'fake@email.com';
   res.render("urls_index", templateVars);
 });
@@ -71,7 +80,7 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   var shortID = generateRandomString();
   urlDatabase[shortID] = { longURL: req.body.longURL, userID: req.cookies.user_id };
-  console.log(74, urlDatabase);
+  console.log(urlDatabase);
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
@@ -108,7 +117,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
