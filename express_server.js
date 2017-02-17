@@ -36,7 +36,11 @@ var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 app.get("/urls", (req, res) => {
+  console.log(39, req.cookies, users);
   let templateVars = { urls: urlDatabase, user: users[req.cookies.tinyApp] };
+  debugger
+  console.log(40, users[req.cookies.tinyApp]);
+  // templateVars.user.email = 'fake@email.com';
   res.render("urls_index", templateVars);
 });
 
@@ -46,7 +50,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
+  console.log(52, req.body, req.cookies);  // debug statement to see POST parameters
   var shortID = generateRandomString();
   urlDatabase[shortID] = req.body.longURL;
   console.log(urlDatabase);
@@ -54,7 +58,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.username] };
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.userID] };
   res.render("urls_show", templateVars);
 });
 
@@ -73,6 +77,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.get("/", (req, res) => {
+  console.log(79, req.cookies);
   res.end("Hello!");
 });
 
@@ -89,9 +94,8 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-
 app.post("/logout", (req, res) => {
-  res.clearCookie("tinyApp", req.body.username);
+  res.clearCookie("tinyApp");
   res.redirect('/');
 });
 
@@ -127,11 +131,11 @@ app.post("/register", (req, res) => {
   };
 
   let userID = generateRandomString();
-    users[userID] = {id: userID, email: req.body.email, password: req.body.password};
-    res.cookie('tinyApp', userID);
-    res.redirect('/')
-          console.log(users);
-  });
+  users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+  res.cookie('tinyApp', userID);
+  res.redirect('/urls');
+  console.log(135, users);
+});
 
   app.get("/login", (req, res) => {
     let templateVars = { urls: urlDatabase, user: users[req.cookies.tinyApp] };
@@ -141,9 +145,9 @@ app.post("/register", (req, res) => {
   app.post("/login", (req, res) => {
     const { email, password } = req.body;
 
-    for (const userId in users) {
-      if (users[userId].email === email && users[userId].password === password) {
-        res.cookie("tinyapp", userId);
+    for (const userID in users) {
+      if (users[userID].email === email && users[userID].password === password) {
+        res.cookie("tinyApp", userID);
         return res.redirect("/");
       }
     }
