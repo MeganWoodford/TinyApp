@@ -139,8 +139,15 @@ app.post("/register", (req, res) => {
   });
 
   app.post("/login", (req, res) => {
-    res.cookie("tinyApp", req.body.username);
-    res.redirect('/');
+    const { email, password } = req.body;
+
+    for (const userId in users) {
+      if (users[userId].email === email && users[userId].password === password) {
+        res.cookie("tinyapp", userId);
+        return res.redirect("/");
+      }
+    }
+    return res.status(403).send("Please provide a valid email address and password to login");
   });
 
 
